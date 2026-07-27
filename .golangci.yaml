@@ -47,6 +47,10 @@ linters:
         - pattern: ^netlink\.(Handle\.)?("AddrList|BridgeVlanList|ChainList|ClassList|ConntrackTableList|DevLinkGetDeviceList|DevLinkGetAllPortList|DevlinkGetDeviceParams|FilterList|FouList|GenlFamilyList|GTPPDPList|LinkByName|LinkByAlias|LinkList|LinkSubscribeWithOptions|NeighList|NeighProxyList|NeighListExecute|LinkGetProtinfo|QdiscList|RdmaLinkList|RdmaLinkByName|RdmaLinkDel|RouteList|RouteListFiltered|RouteListFilteredIter|RouteSubscribeWithOptions|RuleList|RuleListFiltered|SocketGet|SocketDiagTCPInfo|SocketDiagTCP|SocketDiagUDPInfo|SocketDiagUDP|UnixSocketDiagInfo|UnixSocketDiag|SocketXDPGetInfo|SocketDiagXDP|VDPAGetDevList|VDPAGetDevConfigList|VDPAGetMGMTDevList|XfrmPolicyList|XfrmStateList)
           pkg: ^github.com/vishvananda/netlink$
           msg: Found netlink function which can return ErrDumpInterrupted. Use safenetlink package instead.
+        # Only reported in test files, see the forbidigo exclusion rule below.
+        - pattern: ^reflect\.DeepEqual$
+          pkg: ^reflect$
+          msg: Use assert.Equal from github.com/stretchr/testify/assert instead, which reports the differing fields on failure. See https://github.com/cilium/cilium/issues/40562.
       analyze-types: true
     goheader:
       values:
@@ -212,6 +216,13 @@ linters:
           - gomodguard_v2
         path: test/
         text: "logrus"
+      # reflect.DeepEqual is discouraged in test code only: it reports that two
+      # values differ without saying which fields, making failures hard to
+      # debug. Non-test code may use it freely.
+      - linters:
+          - forbidigo
+        path-except: _test\.go$
+        text: reflect\.DeepEqual
     paths:
       - third_party$
       - builtin$
