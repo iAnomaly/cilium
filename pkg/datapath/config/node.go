@@ -47,6 +47,11 @@ func NodeConfig(lnc *Config) Node {
 	node.TracePayloadLen = uint32(option.Config.TracePayloadlen)
 	node.TracePayloadLenOverlay = uint32(option.Config.TracePayloadlenOverlay)
 
+	node.CTReport = types.CTReportConfig{
+		Interval: uint32(option.Config.MonitorAggregationInterval.Seconds()),
+		Flags:    uint8(option.Config.MonitorAggregationFlags),
+	}
+
 	if lnc.DirectRoutingDevice != nil {
 		node.DirectRoutingDevIfIndex = uint32(lnc.DirectRoutingDevice.Index)
 	}

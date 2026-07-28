@@ -133,3 +133,16 @@ ASSIGN_CONFIG(struct ct_timeout_config, ct_timeouts, {
 	.syn_timeout = 60,
 	.close_timeout = 10,
 })
+
+struct ct_report_config {
+	/* Interval between aggregated monitor reports in seconds. */
+	__u32 interval;
+	/* TCP flags that trigger conntrack monitor reports. */
+	__u8 flags;
+};
+
+NODE_CONFIG(struct ct_report_config, ct_report, "Conntrack reporting configuration")
+ASSIGN_CONFIG(struct ct_report_config, ct_report, {
+	.interval = 5,
+	.flags = 0xff,
+})
