@@ -40,6 +40,16 @@ tests are passed.
 Additionally, Cilium provides ``CiliumGatewayClassConfig`` CRD, which can be referenced in
 `GatewayClass.parametersRef <https://gateway-api.sigs.k8s.io/reference/api-types/gatewayclass/#gatewayclass-parameters>`_.
 
+.. note::
+
+   Annotations supplied through Gateway infrastructure metadata are propagated
+   to the generated Service, as required by Gateway API. Annotations in the
+   ``cec.cilium.io/*`` namespace remain on that Service, but are not propagated
+   to the internally generated ``CiliumEnvoyConfig``. These annotations control
+   proxy and policy behavior when applied to a CEC, so Cilium ignores values
+   supplied indirectly through Gateway metadata and preserves its internally
+   generated CEC controls.
+
 .. admonition:: Video
  :class: attention
 
