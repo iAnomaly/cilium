@@ -346,7 +346,7 @@ func (h *HeaderfileWriter) WriteNodeConfig(w io.Writer, cfg *config.Config) erro
 			cDefinesMap["IPV4_DIRECT_ROUTING"] = fmt.Sprintf("%d", ipv4)
 		}
 		if option.Config.EnableIPv6 {
-			ip := preferredIPv6Address(drd.Addrs)
+			ip := tables.PreferredIPv6Address(drd.Addrs)
 			extraMacrosMap["IPV6_DIRECT_ROUTING"] = ip.String()
 			fw.WriteString(FmtDefineAddress("IPV6_DIRECT_ROUTING", ip.AsSlice()))
 		}
@@ -614,17 +614,4 @@ func (h *HeaderfileWriter) writeTemplateConfig(fw *bufio.Writer, e endpoint.Conf
 func (h *HeaderfileWriter) WriteTemplateConfig(w io.Writer, e endpoint.Config) error {
 	fw := bufio.NewWriter(w)
 	return h.writeTemplateConfig(fw, e)
-}
-
-func preferredIPv6Address(deviceAddresses []tables.DeviceAddress) netip.Addr {
-	var ip netip.Addr
-	for _, addr := range deviceAddresses {
-		if addr.Addr.Is6() {
-			ip = addr.Addr
-			if !ip.IsLinkLocalUnicast() {
-				break
-			}
-		}
-	}
-	return ip
 }
