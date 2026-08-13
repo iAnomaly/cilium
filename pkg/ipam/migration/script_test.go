@@ -28,6 +28,7 @@ import (
 	"github.com/cilium/cilium/api/v1/models"
 	endpointapi "github.com/cilium/cilium/api/v1/server/restapi/endpoint"
 	agentK8s "github.com/cilium/cilium/daemon/k8s"
+	cmtypes "github.com/cilium/cilium/pkg/clustermesh/types"
 	"github.com/cilium/cilium/pkg/container/set"
 	"github.com/cilium/cilium/pkg/datapath/linux/sysctl"
 	sysctlFake "github.com/cilium/cilium/pkg/datapath/linux/sysctl/fake"
@@ -71,6 +72,7 @@ func TestScriptClusterPoolToMultiPool(t *testing.T) {
 				agentK8s.ResourcesCell,
 				k8sTables.TablesCell,
 				datapathTables.DirectRoutingDeviceCell,
+				cell.Config(cmtypes.DefaultClusterInfo),
 				cell.Provide(
 					func() *option.DaemonConfig {
 						return &option.DaemonConfig{

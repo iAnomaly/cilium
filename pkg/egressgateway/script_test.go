@@ -54,6 +54,9 @@ func TestPrivilegedScripts(t *testing.T) {
 
 	// Set the node name to be "localnode1" for all the tests.
 	nodeTypes.SetName("localnode1")
+	// Set ClusterName for [nodeTypes.Node.IsLocal] to work properly since it
+	// still depends on the legacy global config.
+	option.Config.ClusterName = cmtypes.DefaultClusterInfo.Name
 
 	scripttest.Test(t,
 		ctx,
